@@ -1,0 +1,261 @@
+<!doctype html>
+
+<script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+
+<script
+  src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+  integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+  crossorigin="anonymous"></script>
+
+<link
+  href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+  rel="stylesheet"
+  integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+  crossorigin="anonymous">
+
+
+<style>
+
+.fluidaudio{
+    height: 50px;
+    background-color: #c7c7c7;
+    margin: auto;
+}
+.fluidaudiobutton{
+    height:50px; 
+    width: 50px;
+    border: none;
+    float:left;
+    outline:none;
+}
+.timeline{
+    position: relative;
+    overflow: hidden;
+    background: rgba(255,255,255,.75);
+}
+.progress {
+    width: 0%;
+    height: 50px;
+    transform-origin: left;
+    background: rgb(49, 172, 247);
+
+}
+</style>
+
+<title>{{ result.collections[0].title }}</title>
+
+<div class="jumbotron">
+    <div class="container">
+{% for collection in result.collections %}
+
+        <div class="media">
+            <div class="media-left">
+                <img src="{{ collection.image_url }}" width="240">
+            </div>
+
+            <div class="media-body">
+                <h1 class="media-heading">{{ collection.title }}</h1>
+                <h2>{{ collection.author }}</h2>
+                <h4>{{ collection.subtitle }}</h4>
+            </div>
+        </div>
+{% endfor %}
+        <form class="navbar-form" role="search">
+            <div class="input-group">
+                <input class="form-control input-lg" placeholder="Search" name="q" id="query" type="text">
+                <div class="input-group-btn">
+                    <button class="btn btn-default btn-lg" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+<div class="container">
+{% for match in result.matches %}
+<div class="media">
+    <div class="media-left">
+        <img src="{{ match.rss_item.image_url }}" width="120">
+    </div>
+    <div class="media-body">
+        <h3 class="media-heading">{{ match.rss_item.author }}</h3>
+        <h3>{{ match.rss_item.title }}</h3>
+        <h4>{{ match.rss_item.pubdate }}</h4>
+        <h4>{{ match.rss_item.description }}</h4>
+    </div>
+</div>
+
+    <audio id="{{ match.id }}_audio" preload="none" src="{{ match.rss_item.link }}"></audio>
+    <div class="fluidaudio">
+        <button id="{{ match.id }}_play" class="fluidaudiobutton" onclick="play(this.id)"><i class="glyphicon glyphicon-play"></i></button>
+        <button id="{{ match.id }}_pause" class="fluidaudiobutton" style="display:none;" onclick="pause(this.id)"><i class="glyphicon glyphicon-pause"></i></button>
+        <button id="{{ match.id }}_skip" class="fluidaudiobutton" class="fluidaudiobutton" onclick="skip(this.id)"><i class="glyphicon glyphicon glyphicon-step-forward"></i></button>
+        <div id="{{ match.id }}_timeline" class="timeline"> 
+            <div id="{{match.id}}_progress" class="progress"></div>
+            <canvas id="{{ match.id }}_canvas" height="50px" style="position: absolute; width: 100%; height: 50px; top: 0;"></canvas>
+        </div>
+    </div>
+
+    <br/>
+
+    {% if match.snippets %}
+    <div id="{{ match.id }}_snippet" class="well">{{ match.snippets[0] | safe}}</div>
+    {% endif %}
+
+    <hr/>
+{% endfor %}
+
+</div>
+
+<script>
+
+
+var snippets = {};
+var timestamps = {};
+
+{% for match in result.matches %}
+    snippets['{{ match.id }}'] = {{ match.snippets | tojson }};
+    timestamps['{{ match.id }}'] = {{ match.timestamps }};
+{% endfor %}
+
+$( document ).ready(function() {
+    console.log( "ready!" );
+
+{% for match in result.matches %}
+    id = '{{ match.id }}';
+    duration = {{ match.metadata.duration }};
+
+    canvas = $('#{{ match.id }}_canvas')[0];
+
+    ctx = canvas.getContext("2d");
+    w = canvas.width;
+    h = canvas.height;
+
+    ctx.fillStyle = "#f75205";
+
+    $.each(timestamps[id] , function(index, val) { 
+        hit = Math.floor(w*timestamps[id][index]/duration);
+        ctx.fillRect(hit, 0, 1, 50);
+        
+    });
+
+
+    $('#{{ match.id }}_timeline').click(function(e) {
+        duration = {{ match.metadata.duration }};
+        var audio = $('#{{ match.id }}_audio');
+
+        var pc = e.offsetX / $(this).width();
+
+        audio[0].currentTime = duration * pc;
+
+        play("{{match.id}}_play");
+    })
+
+{% endfor %}
+
+});
+
+function play(play_id) {
+    var id = play_id.split("_")[0];
+
+    var audio = $('#' + id + '_audio')[0];
+
+    var play_btn = $('#' + id + '_play');
+    var pause_btn = $('#' + id + '_pause');
+
+    audio.play();
+
+    play_btn.hide();
+    pause_btn.show();
+}
+
+function pause(pause_id) {
+    var id = pause_id.split("_")[0];
+
+    var audio = $('#' + id + '_audio')[0];
+
+    var play_btn = $('#' + id + '_play');
+    var pause_btn = $('#' + id + '_pause');
+
+    audio.pause();
+
+    play_btn.show();
+    pause_btn.hide();
+
+}
+
+function skip(skip_id) {
+    var buffer = 1;
+    var id = skip_id.split("_")[0];
+
+    var audio = $('#' + id + '_audio')[0];
+
+    var now = audio.currentTime + buffer;
+    var skip_to = timestamps[id][0];
+
+    $.each(timestamps[id] , function(index, val) { 
+        if (val > now) {
+            skip_to = val;
+            return false;
+        }
+    });
+
+    skip_to = Math.max(skip_to - buffer, 0);
+
+    audio.currentTime = skip_to;
+
+    if (!audio.isPlaying) {
+        var play_btn = $('#' + id + '_play');
+        var pause_btn = $('#' + id + '_pause');
+
+        audio.play();
+
+        play_btn.hide();
+        pause_btn.show();
+
+    }
+}
+
+document.addEventListener('play', function(e){
+    var audios = $('audio');
+    $.each(audios, function(index, val) {
+        if (audios[index] != e.target) {
+            audios[index].pause();
+        }
+    });
+}, true);
+
+
+document.addEventListener('timeupdate', function(e){
+    var id = e.target.id.split('_')[0];
+
+    var audio = $('#' + id + '_audio');
+    var progress = $('#' + id + '_progress');
+
+    var percent = 100 * audio[0].currentTime / audio[0].duration;
+    percent = percent + "%";
+    progress.css("width", percent);
+
+
+    var snippet_box = $('#' + id + '_snippet');
+
+    var now = audio[0].currentTime - 5;
+    var snippet = snippets[id][0];
+
+    $.each(timestamps[id] , function(index, val) { 
+        if (val > now) {
+            snippet = snippets[id][index];
+            return false;
+        }
+    });
+
+    snippet_box.html(snippet);
+
+
+}, true);
+
+</script>
