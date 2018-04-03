@@ -3,7 +3,9 @@
 About
 =====
 
-The FluidDATA python API can be used to query millions of podcast episodes.  This tutorial will show you how to integrate the FluidDATA python API with a simple flask application that can search a single podcast channel.
+The FluidDATA python API can be used to query millions of podcast episodes.
+This tutorial will show you how to integrate the FluidDATA python API with a
+simple flask application that can search a single podcast channel.
 
 
 Installation
@@ -21,16 +23,23 @@ pip install fluiddata
 FluidDATA API Token
 ---------------------
 
-To use the FluidDATA python API you will need an API Token which you can get by creating an account at [https://accounts.fluiddata.com/register]
+You will need an API token to use the FluidDATA API.  By registering for an
+account at [https://accounts.fluiddata.com/register] you will be automatically
+enrolled in our free plan which allows up to 100 free searches per month.
 
-<p align="center"><img src="https://cache.btpl.io/cache/landing_logo.svg" /></p>
-<p align="center"><img src="https://cache.btpl.io/cache/landing_logo.svg" /></p>
+After you have created an account navigate to
+[https://accounts.bitplatter.com/home/security] to view your token.  You can
+also view your remaining search quota or sign up for a larger plan at
+[https://accounts.bitplatter.com/home/subscriptions].
+
+<p align="center"><img src="https://cache.btpl.io/cache/flask_example/token.png" /></p>
 
 
 Validating the Token
 --------------------
 
-You can use the ``subscription_info`` method to verify that your API token is working correctly.
+You can use the ``subscription_info`` method to verify that your API token is
+working correctly.
 
 ```python
 >>> from fluiddata import Fluid
@@ -52,7 +61,8 @@ You can use the ``subscription_info`` method to verify that your API token is wo
 Setup Flask Application
 -----------------------
 
-Once you have your FluidDATA Token you will need to configure the Flask application
+Once you have your FluidDATA Token you will need to configure the Flask
+application
 
 ```bash
 git clone <path>
@@ -65,14 +75,17 @@ Setup Flask Application
 cd fluiddata_flask_example
 ```
 
-Open the settings.py file and fill in the values for `FLUID_TOKEN` and `FLUID_RSS_URL`
+Open the settings.py file and fill in the values for `FLUID_TOKEN` and
+`FLUID_RSS_URL`
 
 
 
 ```python
 FLUID_TOKEN = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
-FLUID_RSS_URL = 'https://www.npr.org/rss/podcast.php?id=510289'
+FLUID_RSS_URL = 'http://your.rss.feed.url.here'
 ```
+
+You can try some of the example rss feeds below.
 
 | Podcast       | FLUID RSS URL |
 | ------------- | ------------- |
