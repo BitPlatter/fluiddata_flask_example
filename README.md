@@ -24,13 +24,13 @@ FluidDATA API Token
 ---------------------
 
 You will need an API token to use the FluidDATA API.  By registering for an
-account at [https://accounts.fluiddata.com/register] you will be automatically
+account at https://accounts.fluiddata.com/register you will be automatically
 enrolled in our free plan which allows up to 100 free searches per month.
 
 After you have created an account navigate to
-[https://accounts.bitplatter.com/home/security] to view your token.  You can
+https://accounts.bitplatter.com/home/security to view your token.  You can
 also view your remaining search quota or sign up for a larger plan at
-[https://accounts.bitplatter.com/home/subscriptions].
+https://accounts.bitplatter.com/home/subscriptions.
 
 <p align="center"><img src="https://cache.btpl.io/cache/flask_example/token.png" /></p>
 
