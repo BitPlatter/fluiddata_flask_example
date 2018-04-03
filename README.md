@@ -111,13 +111,32 @@ FLUID_TOKEN = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
 FLUID_RSS_URL = 'http://your.rss.feed.url.here'
 ```
 
-If you don't know a podcast feed url off the top of your head you can try some of the example rss feeds below.
+If you don't know a podcast feed urls off the top of your head you can try some of the example rss feeds below.
 
 | Podcast       | FLUID RSS URL |
 | ------------- | ------------- |
 | Planet Money  | https://www.npr.org/rss/podcast.php?id=510289 |
 | Joe Rogan Experience | http://joeroganexp.joerogan.libsynpro.com/rss |
 | Indie Hackers | http://feeds.backtracks.fm/feeds/indiehackers/indiehackers/feed.xml?1522718080 |
+
+
+## Running the Flask Application
+
+Once the settings.py file has been populated we are ready to run the flask
+application.  From the `fluiddata_flask_example` directory run the following
+command to start flask.
+
+```bash
+FLASK_APP=fluiddata_flask.py flask run
+```
+
+You should now be able to point your browser to http://127.0.0.1:5000/ and view the webpage.
+
+<p align="center"><img src="https://cache.btpl.io/cache/flask_example/asteroid.png" /></p>
+
+
+
+
 
 
 
