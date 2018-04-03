@@ -1,3 +1,4 @@
+<p align="center"><img src="https://cache.btpl.io/cache/landing_logo.svg" /></p>
 
 About
 =====
@@ -22,8 +23,8 @@ FluidDATA API Token
 
 To use the FluidDATA python API you will need an API Token which you can get by creating an account at [https://accounts.fluiddata.com/register]
 
-![alt text]("https://cache.btpl.io/cache/fb.png" "Account Creation")
-![alt text]("https://cache.btpl.io/cache/fb.png" "FluidDATA Token")
+<p align="center"><img src="https://cache.btpl.io/cache/landing_logo.svg" /></p>
+<p align="center"><img src="https://cache.btpl.io/cache/landing_logo.svg" /></p>
 
 
 Validating the Token
@@ -76,3 +77,8 @@ FLUID_RSS_URL = 'https://www.npr.org/rss/podcast.php?id=510289'
 | Podcast       | FLUID RSS URL |
 | ------------- | ------------- |
 | Planet Money  | https://www.npr.org/rss/podcast.php?id=510289 |
+| Joe Rogan Experience | |
+| Indie Hackers | |
+
+
+
