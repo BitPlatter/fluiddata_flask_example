@@ -76,6 +76,13 @@
 </div>
 
 <div class="container">
+    {% if result.query %}
+    <h3 class="text-center">
+        Found <b>{{ result.nmatches }}</b> results for <b>{{ result.query }}</b>
+    </h3>
+    <hr/>
+    {% endif %}
+
 {% for match in result.matches %}
 <div class="media">
     <div class="media-left">
