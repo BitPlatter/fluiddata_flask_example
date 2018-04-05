@@ -16,7 +16,7 @@ When you are done with this tutorial you can read the full API documentation her
 
 ## Installation
 
-In order to run this example application you will need three things
+In order to run this example we will need to gather three things:
 
 1. flask
 2. fluiddata python library
@@ -45,8 +45,8 @@ pip install fluiddata
 
 ### FluidDATA API Token
 
-You will need an API token to use the FluidDATA API.  By registering for an
-account at https://accounts.fluiddata.com/register you will be automatically
+You will need a FluidDATA API token to use the FluidDATA API.  By registering for an
+account at https://accounts.bitplatter.com/register you will be automatically
 enrolled in our free plan which allows up to 100 free searches per month.
 
 After you have created an account navigate to
@@ -59,9 +59,10 @@ https://accounts.bitplatter.com/home/subscriptions.
 
 #### Validating the Token (optional)
 
-You can use the ``Fluid.subscription_info`` method to verify that your API token is
-working correctly.  Fire up python and try calling the `Fluid.subscription_info` method.
-You should see output similar to what is given below.
+You can use the **Fluid.subscription_info** method to verify that your API
+token is working correctly.  Fire up a python interpreter and try calling the
+**Fluid.subscription_info** method.  You should see output similar to what is
+given below.
 
 ```python
 >>> from fluiddata import Fluid
@@ -93,25 +94,20 @@ cd fluiddata_flask_example
 ### Configure the Flask Application
 
 To configure the flask application we need to navigate to the
-`fluiddata_flask_example` directory and edit the `settings.py` file.  
+**fluiddata_flask_example** directory and edit the **settings.py** file.  
 
-Open the settings.py file and fill in the values for `FLUID_TOKEN` and
-`FLUID_RSS_URL`.  The `FLUID_TOKEN` will be your FluidDATA API token you
+Open the settings.py file and fill in the values for **FLUID_TOKEN** and
+**FLUID_RSS_URL**.  The **FLUID_TOKEN** will be your FluidDATA API token you
 obtained in the [FluidDATA API Token](#fluiddata-api-token) section.  The
 `FLUID_RSS_URL` can be any valid podcast RSS url.
-
-We have indexed over 150,000 podcast channels, so its likely the podcast you
-are interested in has already been indexed by us.  If your podcast feed is not
-recognized then send us an email at support@bitplatter.com with a link to the
-podcast channel and we can add it.
-
 
 ```python
 FLUID_TOKEN = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
 FLUID_RSS_URL = 'http://your.rss.feed.url.here'
 ```
 
-If you don't know a podcast feed urls off the top of your head you can try some of the example rss feeds below.
+If you don't know a podcast feed url off the top of your head you can try one
+of the example rss feeds below.
 
 | Podcast       | FLUID RSS URL |
 | ------------- | ------------- |
@@ -135,8 +131,40 @@ You should now be able to point your browser to http://127.0.0.1:5000/ and view 
 <p align="center"><img src="https://cache.btpl.io/cache/flask_example/asteroid.png" /></p>
 
 
+# Troubleshooting
+
+## Flask Exception: FluidDATA has not indexed this channel
+
+We have indexed over 150,000 podcast channels, so its likely the podcast you
+are interested in has already been indexed.  However, if your podcast feed is
+not recognized then send us an email at <support@bitplatter.com> with a link to
+the podcast channel and we will add it to our database.
+
+## Flask returns "Something Went Wrong"
+
+You may have used all of your FluidDATA API credits for the month.  The free
+plan allows up to 100 free searches per month.  If you require a more search
+credits please see our other plans at <https://www.bitplatter.com/fluiddata> or
+<https://accounts.bitplatter.com/home/subscriptions>.
+
+## Some audio doesn't play or when I skip to a search result it is several seconds off
+
+We link back to the original source of the podcast as specified in the RSS
+feed.  This means that if the audio file has been updated since we first
+indexed it you may not get the exact right result.  Many podcasters only make
+their podcasts free for a limited time or dynamically insert ads which can skew
+the timestamps.  While we could serve the podcast episodes ourselves we want
+to respect the podcast author's right to remove, edit, or correct their
+podcast.
+
+# Want to learn more?
+
+The full documentation for the API can be found at
+<https://docs.bitplatter.com/fluiddata-python/>. This example only showed how to use the
+**query** and **collection** searches, but there are more ways to search FluidDATA.
 
 
+To learn more about BitPlatter please visit our website at https://www.bitplatter.com.
 
-
+ 
 
