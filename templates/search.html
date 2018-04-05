@@ -100,7 +100,7 @@
     <div class="fluidaudio">
         <button id="{{ match.id }}_play" class="fluidaudiobutton" onclick="play(this.id)"><i class="glyphicon glyphicon-play"></i></button>
         <button id="{{ match.id }}_pause" class="fluidaudiobutton" style="display:none;" onclick="pause(this.id)"><i class="glyphicon glyphicon-pause"></i></button>
-        <button id="{{ match.id }}_skip" class="fluidaudiobutton" class="fluidaudiobutton" onclick="skip(this.id)"><i class="glyphicon glyphicon glyphicon-step-forward"></i></button>
+        <button id="{{ match.id }}_skip" class="fluidaudiobutton" onclick="skip(this.id)"><i class="glyphicon glyphicon glyphicon-step-forward"></i></button>
         <div id="{{ match.id }}_timeline" class="timeline"> 
             <div id="{{match.id}}_progress" class="progress"></div>
             <canvas id="{{ match.id }}_canvas" height="50px" style="position: absolute; width: 100%; height: 50px; top: 0;"></canvas>
