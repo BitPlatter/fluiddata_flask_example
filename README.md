@@ -131,23 +131,23 @@ You should now be able to point your browser to http://127.0.0.1:5000/ and view 
 <p align="center"><img src="https://cache.btpl.io/cache/flask_example/asteroid.png" /></p>
 
 
-# Troubleshooting
+## Troubleshooting
 
-## Flask Exception: FluidDATA has not indexed this channel
+### Flask Exception: FluidDATA has not indexed this channel
 
 We have indexed over 150,000 podcast channels, so its likely the podcast you
 are interested in has already been indexed.  However, if your podcast feed is
 not recognized then send us an email at <support@bitplatter.com> with a link to
 the podcast channel and we will add it to our database.
 
-## Flask returns "Something Went Wrong"
+### Flask returns "Something Went Wrong"
 
 You may have used all of your FluidDATA API credits for the month.  The free
 plan allows up to 100 free searches per month.  If you require a more search
 credits please see our other plans at <https://www.bitplatter.com/fluiddata> or
 <https://accounts.bitplatter.com/home/subscriptions>.
 
-## Some audio doesn't play or when I skip to a search result it is several seconds off
+### Some audio doesn't play or when I skip to a search result it is several seconds off
 
 We link back to the original source of the podcast as specified in the RSS
 feed.  This means that if the audio file has been updated since we first
@@ -159,12 +159,12 @@ podcast.
 
 # Want to learn more?
 
-The full documentation for the API can be found at
-<https://docs.bitplatter.com/fluiddata-python/>. This example only showed how to use the
-**query** and **collection** searches, but there are more ways to search FluidDATA.
+This example only shows a subset of the full FluidDATA API functionality. The
+full documentation for the API can be found at
+<https://docs.bitplatter.com/fluiddata-python/>.
 
 
 To learn more about BitPlatter please visit our website at https://www.bitplatter.com.
 
  
-
+<p align="center"><a href="https://www.bitplatter.com/fluiddata"><img src="https://cache.btpl.io/cache/bitplatter-trans.png" /></a></p>
