@@ -43,12 +43,23 @@
     background: rgb(49, 172, 247);
 
 }
+.playercanvas {
+    position: absolute;
+    width: 100%;
+    height: 50px;
+    top: 0;
+}
 </style>
 
 <title>{{ result.collections[0].title }}</title>
 
 <div class="jumbotron">
     <div class="container">
+
+<!-- The result.collections object contains collection metadata for each
+     collection that was searches. Iterate through these and display them.
+     Note: Only one collection is searched in this example
+-->
 {% for collection in result.collections %}
 
         <div class="media">
@@ -76,42 +87,58 @@
 </div>
 
 <div class="container">
-    {% if result.query %}
+
+<!-- Display the number of matches and the query string -->
+{% if result.query %}
     <h3 class="text-center">
         Found <b>{{ result.nmatches }}</b> results for <b>{{ result.query }}</b>
     </h3>
     <hr/>
-    {% endif %}
+{% endif %}
 
+<!-- Iterate the episodes that matched the user's query -->
 {% for match in result.matches %}
-<div class="media">
-    <div class="media-left">
-        <img src="{{ match.rss_item.image_url }}" width="120">
+    <div class="media">
+        <div class="media-left">
+            <img src="{{ match.rss_item.image_url }}" width="120">
+        </div>
+<!-- Each match contains the metadata extracted from the RSS feed.  Use
+     the match.rss item entry to access these values
+-->
+        <div class="media-body">
+            <h3 class="media-heading">{{ match.rss_item.author }}</h3>
+            <h3>{{ match.rss_item.title }}</h3>
+            <h4>{{ match.rss_item.pubdate }}</h4>
+            <h4>{{ match.rss_item.description }}</h4>
+        </div>
     </div>
-    <div class="media-body">
-        <h3 class="media-heading">{{ match.rss_item.author }}</h3>
-        <h3>{{ match.rss_item.title }}</h3>
-        <h4>{{ match.rss_item.pubdate }}</h4>
-        <h4>{{ match.rss_item.description }}</h4>
-    </div>
-</div>
 
+<!-- This is the audio player element which will allow the user to skip right
+     to the match in the podcast episode.
+-->
     <audio id="{{ match.id }}_audio" preload="none" src="{{ match.rss_item.link }}"></audio>
     <div class="fluidaudio">
-        <button id="{{ match.id }}_play" class="fluidaudiobutton" onclick="play(this.id)"><i class="glyphicon glyphicon-play"></i></button>
-        <button id="{{ match.id }}_pause" class="fluidaudiobutton" style="display:none;" onclick="pause(this.id)"><i class="glyphicon glyphicon-pause"></i></button>
-        <button id="{{ match.id }}_skip" class="fluidaudiobutton" onclick="skip(this.id)"><i class="glyphicon glyphicon glyphicon-step-forward"></i></button>
+        <button id="{{ match.id }}_play" class="fluidaudiobutton" onclick="play(this.id)">
+            <i class="glyphicon glyphicon-play"></i>
+        </button>
+        <button id="{{ match.id }}_pause" class="fluidaudiobutton" style="display:none;" onclick="pause(this.id)">
+            <i class="glyphicon glyphicon-pause"></i>
+        </button>
+        <button id="{{ match.id }}_skip" class="fluidaudiobutton" onclick="skip(this.id)">
+            <i class="glyphicon glyphicon glyphicon-step-forward"></i>
+        </button>
         <div id="{{ match.id }}_timeline" class="timeline"> 
             <div id="{{match.id}}_progress" class="progress"></div>
-            <canvas id="{{ match.id }}_canvas" height="50px" style="position: absolute; width: 100%; height: 50px; top: 0;"></canvas>
+            <canvas id="{{ match.id }}_canvas" class="playercanvas" height="50px"></canvas>
         </div>
     </div>
 
     <br/>
 
-    {% if match.snippets %}
+<!-- Display the matching audio snippet -->
+{% if match.snippets %}
     <div id="{{ match.id }}_snippet" class="well">{{ match.snippets[0] | safe}}</div>
-    {% endif %}
+{% endif %}
 
     <hr/>
 {% endfor %}
@@ -129,28 +156,41 @@ var timestamps = {};
     timestamps['{{ match.id }}'] = {{ match.timestamps }};
 {% endfor %}
 
+
+/* Draw the player timeline and create necessary callbacks */
 $( document ).ready(function() {
-    console.log( "ready!" );
 
 {% for match in result.matches %}
+
+    /* Draw the location of each match on the associated audio timeline */
     id = '{{ match.id }}';
     duration = {{ match.metadata.duration }};
 
     canvas = $('#{{ match.id }}_canvas')[0];
 
+    /* Set the width of the timeline canvas to the width of the parent div.  If
+        we don't do this the canvas defaults to width 300 and the lines will
+        look fuzzy. We can't define this statically in the <canvas> element
+        because we can't know how large it is until it is displayed.
+     */
+    timeline = $('#{{ match.id }}_timeline');
+    canvas.width = timeline.width();
+
     ctx = canvas.getContext("2d");
     w = canvas.width;
-    h = canvas.height;
 
     ctx.fillStyle = "#f75205";
 
-    $.each(timestamps[id] , function(index, val) { 
+    $.each(timestamps[id] , function(index, val) {
+        // Round x offset to give crisp lines
         hit = Math.floor(w*timestamps[id][index]/duration);
-        ctx.fillRect(hit, 0, 1, 50);
+        ctx.fillRect(hit, 0, 3, 50);
         
     });
 
-
+    /* Create a callback function to allow a user to click on the audio
+     * timeline to set the audio's current time
+     */
     $('#{{ match.id }}_timeline').click(function(e) {
         duration = {{ match.metadata.duration }};
         var audio = $('#{{ match.id }}_audio');
@@ -166,6 +206,7 @@ $( document ).ready(function() {
 
 });
 
+/* Handle user clicking the play button */
 function play(play_id) {
     var id = play_id.split("_")[0];
 
@@ -180,6 +221,7 @@ function play(play_id) {
     pause_btn.show();
 }
 
+/* Handle user clicking the pause button */
 function pause(pause_id) {
     var id = pause_id.split("_")[0];
 
@@ -195,15 +237,25 @@ function pause(pause_id) {
 
 }
 
+/* Handle user clicking the skip button */
 function skip(skip_id) {
-    var buffer = 1;
+
+    // padding defines an offset that the audio will skip to.
+    // ie, if padding = 1 then the audio player will skip to one second
+    // before the match giving the user some context in which the match
+    // was used
+    var padding = 1;
     var id = skip_id.split("_")[0];
 
     var audio = $('#' + id + '_audio')[0];
 
-    var now = audio.currentTime + buffer;
+    var now = audio.currentTime + padding;
+
+    // Default to skip to first timestamp.
     var skip_to = timestamps[id][0];
 
+    // Iterate the timestamps associated with this audio to find
+    // the next timestamp that should be skipped to.
     $.each(timestamps[id] , function(index, val) { 
         if (val > now) {
             skip_to = val;
@@ -211,7 +263,8 @@ function skip(skip_id) {
         }
     });
 
-    skip_to = Math.max(skip_to - buffer, 0);
+    // Don't allow us to skip to a negative time
+    skip_to = Math.max(skip_to - padding, 0);
 
     audio.currentTime = skip_to;
 
@@ -227,6 +280,9 @@ function skip(skip_id) {
     }
 }
 
+/* Setup a listener to pause players the user is not interacting with.  This
+   prevents multiple audio files from playing at the same time.
+ */
 document.addEventListener('play', function(e){
     var audios = $('audio');
     $.each(audios, function(index, val) {
@@ -236,8 +292,11 @@ document.addEventListener('play', function(e){
     });
 }, true);
 
-
+/* Setup a listener to update the timeline progress bar in the player 
+   and the audio snippet displayed to the user in the player.
+ */
 document.addEventListener('timeupdate', function(e){
+    /* Advance progress bar */
     var id = e.target.id.split('_')[0];
 
     var audio = $('#' + id + '_audio');
@@ -247,12 +306,20 @@ document.addEventListener('timeupdate', function(e){
     percent = percent + "%";
     progress.css("width", percent);
 
-
+    /* Update snippet displayed in the audio player as the audio plays */
     var snippet_box = $('#' + id + '_snippet');
 
+    /* Subtract 5 seconds to display new snippet 5 seconds before it is
+       played
+     */
     var now = audio[0].currentTime - 5;
+
+    /* Default to show the first snippet */
     var snippet = snippets[id][0];
 
+    /* Iterate the timestamps to see if its time to update the displayed
+       snippet
+    */
     $.each(timestamps[id] , function(index, val) { 
         if (val > now) {
             snippet = snippets[id][index];
@@ -260,6 +327,7 @@ document.addEventListener('timeupdate', function(e){
         }
     });
 
+    /* Update the displayed snippet */
     snippet_box.html(snippet);
 
 
