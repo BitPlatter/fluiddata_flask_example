@@ -1,11 +1,16 @@
+"""
+Example FluidDATA API Flask application.
+"""
+
 from flask import Flask
-app = Flask(__name__)
 
 from flask import request
 from flask import render_template
 from flask import redirect, url_for
 
 from fluiddata import Fluid
+
+app = Flask(__name__)
 
 app.config.from_object('settings')
 
@@ -22,7 +27,7 @@ collection = fluid.feed_to_collection(FLUID_RSS_URL)
 # Every API response contains a status variable indicating the success or
 # failure of the API call
 if not collection['status']:
-    raise Exception (
+    raise Exception(
         "FluidDATA has not indexed this channel: %s" % FLUID_RSS_URL)
 
 # Get the FluidDATA collection id for this RSS feed.
@@ -30,10 +35,13 @@ collection_id = collection['result']['id']
 
 @app.route('/')
 def root():
+    """ Redirect to /search url"""
+
     return redirect(url_for('search'))
 
 @app.route('/search')
 def search():
+    """ Parse search query from user and return result template"""
 
     # Get the query term passed in by the user
     query = request.args.get('q', None)
