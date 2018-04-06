@@ -33,6 +33,31 @@ if not collection['status']:
 # Get the FluidDATA collection id for this RSS feed.
 collection_id = collection['result']['id']
 
+def get_pagination(result):
+    query = result['query']
+    current = result['page'] + 1
+    npages = int(result['nmatches']/10) + 1
+    hrefs = [url_for('search', q=query, p=p+1) for p in range(result['nmatches'])]
+
+    if current == 1:
+        previous_href = None
+    else:
+        previous_href = url_for('search', q=query, p=current-1)
+
+    if current == npages:
+        next_href = None
+    else:
+        next_href = url_for('search', q=query, p=current+1)
+
+    return {
+        'current': current,
+        'npages': npages,
+        'hrefs': hrefs,
+        'previous_href': previous_href,
+        'next_href': next_href
+    }
+
+
 @app.route('/')
 def root():
     """ Redirect to /search url"""
@@ -45,14 +70,28 @@ def search():
 
     # Get the query term passed in by the user
     query = request.args.get('q', None)
+    page = request.args.get('p', 0)
+
+    try:
+        page = max(int(page) - 1, 0)
+    except Exception:
+        page = 0
 
     # Query the FluidDATA API for the query term passed in by the user,
     # limiting searches to the RSS channel this app is configured for
-    result = fluid.query(query=query, collection_id=collection_id)
+    result = fluid.query(
+        query=query,
+        page=page,
+        collection_id=collection_id)
 
     if result['status']:
+        pagination = get_pagination(result)
+
         # FluidDATA query was a success!  Pass the template to the user.
-        return render_template('search.html', result=result)
+        return render_template(
+            'search.html',
+            result=result,
+            pagination=pagination)
     else:
         # Something went wrong with the FluidDATA API.  Check the
         # result['msg'] element for a possible explaination.

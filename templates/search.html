@@ -58,6 +58,9 @@
     height: 50px;
     top: 0;
 }
+.currentpage {
+    background-color:blue;
+}
 </style>
 
 <title>{{ result.collections[0].title }}</title>
@@ -164,6 +167,22 @@
 
     <hr/>
 {% endfor %}
+
+    <div align="center">
+        <ul class="pagination">
+{% if pagination.previous_href %}
+            <li class="page-item"><a class="page-link" href="{{ pagination.previous_href }}">Previous</a></li>
+{% endif %}
+{% for p in range(pagination.npages) %}
+            <li class="page-item"><a class="page-link" href="{{ pagination.hrefs[p] }}">{{ p + 1 }}</a></li>
+{% endfor %}
+{% if pagination.next_href %}
+            <li class="page-item"><a class="page-link" href="{{ pagination.next_href }}">Next</a></li>
+{% endif %}
+        </ul>
+    </div>
+
+    <hr/>
 
     <p align="center">
         <a href="https://www.bitplatter.com/fluiddata">
