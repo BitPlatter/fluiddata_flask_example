@@ -40,6 +40,13 @@
     float:left;
     outline:none;
 }
+.timeleft{
+    height:50px;
+    width:50px;
+    text-align: center;
+    vertical-align: middle;
+    padding-top:15px;
+}
 .timeline{
     position: relative;
     overflow: hidden;
@@ -142,7 +149,7 @@
      to the match in the podcast episode.
 -->
     <audio id="{{ match.id }}_audio" preload="none" src="{{ match.rss_item.link }}"></audio>
-    <div class="fluidaudio">
+    <div class="fluidaudio" style="display: flex;">
         <button id="{{ match.id }}_play" class="fluidaudiobutton" onclick="play(this.id)">
             <i class="glyphicon glyphicon-play"></i>
         </button>
@@ -152,10 +159,12 @@
         <button id="{{ match.id }}_skip" class="fluidaudiobutton" onclick="skip(this.id)">
             <i class="glyphicon glyphicon glyphicon-step-forward"></i>
         </button>
-        <div id="{{ match.id }}_timeline" class="timeline"> 
+        <div id="{{ match.id }}_timeline" class="timeline" style="flex: 1;"> 
             <div id="{{match.id}}_progress" class="progress"></div>
             <canvas id="{{ match.id }}_canvas" class="playercanvas" height="50px"></canvas>
         </div>
+        <div id="{{ match.id }}_timeleft" class="timeleft"></div>
+
     </div>
 
     <br/>
@@ -270,6 +279,9 @@ $( document ).ready(function() {
         play("{{match.id}}_play");
     })
 
+    timeleft = $('#{{ match.id }}_timeleft');
+    timeleft.text(format_time_left({{ match.metadata.duration }}));
+
 {% endfor %}
 
 });
@@ -348,6 +360,17 @@ function skip(skip_id) {
     }
 }
 
+function format_time_left(duration) {
+    var minutes = Math.floor(duration / 60).toString();
+    var seconds = Math.floor(duration % 60).toString();
+
+    if (seconds.length == 1) {
+        seconds = '0' + seconds;
+    }
+
+    return minutes + ':' + seconds;
+}
+
 /* Setup a listener to pause players the user is not interacting with.  This
    prevents multiple audio files from playing at the same time.
  */
@@ -398,6 +421,8 @@ document.addEventListener('timeupdate', function(e){
     /* Update the displayed snippet */
     snippet_box.html(snippet);
 
+    timeleft = $('#' + id + '_timeleft');
+    timeleft.text(format_time_left(audio[0].duration - audio[0].currentTime));
 
 }, true);
 
