@@ -83,16 +83,19 @@
             </div>
         </div>
 {% endfor %}
-        <form class="navbar-form" role="search">
-            <div class="input-group">
-                <input class="form-control input-lg" placeholder="Search" name="q" id="query" type="text">
-                <div class="input-group-btn">
-                    <button class="btn btn-default btn-lg" style="height:46px;" type="submit">
-                        <i class="glyphicon glyphicon-search"></i>
-                    </button>
+    
+        <div align="center">
+            <form class="navbar-form" role="search">
+                <div class="input-group">
+                    <input class="form-control input-lg" placeholder="Search" name="q" id="query" type="text">
+                    <div class="input-group-btn">
+                        <button class="btn btn-default btn-lg" style="height:46px;" type="submit">
+                            <i class="glyphicon glyphicon-search"></i>
+                        </button>
+                    </div>
                 </div>
-            </div>
-        </form>
+            </form>
+        </div>
 
     </div>
 </div>
@@ -104,9 +107,17 @@
     <h3 class="text-center">
         Found <b>{{ result.nmatches }}</b> results for <b>{{ result.query }}</b>
     </h3>
-    <hr/>
+{% else %}
+    <h3 class="text-center">
+        Found <b>{{ result.nmatches }}</b> episodes</b>
+    </h3>
 {% endif %}
 
+    <h4 class="text-center">
+        Showing results <b>{{ (result.page * 10) + 1 }}</b> - <b>{{ [(result.page+1) * 10, result.nmatches] | sort | first }}</b>
+    </h4>
+
+    <hr/>
 <!-- Iterate the episodes that matched the user's query -->
 {% for match in result.matches %}
     <div class="media">
