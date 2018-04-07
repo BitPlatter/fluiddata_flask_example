@@ -182,8 +182,8 @@
 {% if pagination.previous_href %}
             <li class="page-item"><a class="page-link" href="{{ pagination.previous_href }}">Previous</a></li>
 {% endif %}
-{% for p in range(pagination.npages) %}
-            <li class="page-item"><a class="page-link" href="{{ pagination.hrefs[p] }}">{{ p + 1 }}</a></li>
+{% for href in pagination.hrefs %}
+            <li class="page-item"><a class="page-link" href="{{ href }}">{{ pagination.labels[loop.index - 1] }}</a></li>
 {% endfor %}
 {% if pagination.next_href %}
             <li class="page-item"><a class="page-link" href="{{ pagination.next_href }}">Next</a></li>

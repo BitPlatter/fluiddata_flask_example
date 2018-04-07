@@ -37,7 +37,15 @@ def get_pagination(result):
     query = result['query']
     current = result['page'] + 1
     npages = int(result['nmatches']/10) + 1
-    hrefs = [url_for('search', q=query, p=p+1) for p in range(result['nmatches'])]
+    hrefs = []
+    labels = []
+
+    href_start = max(current - 5, 0)
+    href_end = min(current + 5, npages)
+
+    for idx in range(href_start, href_end):
+        hrefs.append(url_for('search', q=query, p=idx+1))
+        labels.append(idx + 1)
 
     if current == 1:
         previous_href = None
@@ -53,6 +61,7 @@ def get_pagination(result):
         'current': current,
         'npages': npages,
         'hrefs': hrefs,
+        'labels': labels,
         'previous_href': previous_href,
         'next_href': next_href
     }
