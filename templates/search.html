@@ -27,7 +27,10 @@
   crossorigin="anonymous">
 
 <style>
-
+footer {
+    background-color: #e7e7e7;
+    padding: 15px;
+}
 .fluidaudio{
     height: 50px;
     background-color: #c7c7c7;
@@ -39,8 +42,18 @@
     border: none;
     float:left;
     outline:none;
+    font-size: 1.3em;
+    color: white;
+    padding-top: 4px;
+}
+.skip{
+   background-color: #f75205;
+}
+.play {
+    background-color: #575757;
 }
 .timeleft{
+    background-color: #d7d7d7;
     height:50px;
     width:50px;
     text-align: center;
@@ -150,14 +163,14 @@
 -->
     <audio id="{{ match.id }}_audio" preload="none" src="{{ match.rss_item.link }}"></audio>
     <div class="fluidaudio" style="display: flex;">
-        <button id="{{ match.id }}_play" class="fluidaudiobutton" onclick="play(this.id)">
+        <button id="{{ match.id }}_skip" class="fluidaudiobutton skip" onclick="skip(this.id)">
+            <i class="glyphicon glyphicon glyphicon-step-forward"></i>
+        </button>
+        <button id="{{ match.id }}_play" class="fluidaudiobutton play" onclick="play(this.id)">
             <i class="glyphicon glyphicon-play"></i>
         </button>
-        <button id="{{ match.id }}_pause" class="fluidaudiobutton" style="display:none;" onclick="pause(this.id)">
+        <button id="{{ match.id }}_pause" class="fluidaudiobutton play" style="display:none;" onclick="pause(this.id)">
             <i class="glyphicon glyphicon-pause"></i>
-        </button>
-        <button id="{{ match.id }}_skip" class="fluidaudiobutton" onclick="skip(this.id)">
-            <i class="glyphicon glyphicon glyphicon-step-forward"></i>
         </button>
         <div id="{{ match.id }}_timeline" class="timeline" style="flex: 1;"> 
             <div id="{{match.id}}_progress" class="progress"></div>
@@ -178,49 +191,57 @@
 {% endfor %}
 
     <div align="center">
-        <ul class="pagination">
+        <ul class="pagination pagination-lg">
 {% if pagination.previous_href %}
             <li class="page-item"><a class="page-link" href="{{ pagination.previous_href }}">Previous</a></li>
+{% else %}
+            <li class="page-item disabled"><a class="page-link" href="{{ pagination.previous_href }}">Previous</a></li>
 {% endif %}
 {% for href in pagination.hrefs %}
+{% if pagination.current == pagination.labels[loop.index - 1] %}
+            <li class="page-item active"><a class="page-link" href="{{ href }}">{{ pagination.labels[loop.index - 1] }}</a></li>
+{% else %}
             <li class="page-item"><a class="page-link" href="{{ href }}">{{ pagination.labels[loop.index - 1] }}</a></li>
+{% endif %}
 {% endfor %}
 {% if pagination.next_href %}
             <li class="page-item"><a class="page-link" href="{{ pagination.next_href }}">Next</a></li>
+{% else %}
+            <li class="page-item disabled"><a class="page-link" href="{{ pagination.next_href }}">Next</a></li>
 {% endif %}
         </ul>
     </div>
+</div>
 
-    <hr/>
-
+<footer class="container-fluid text-center">
     <p align="center">
+        Powered By
         <a href="https://www.bitplatter.com/fluiddata">
-            Powered By
             <img height=36 src="https://cache.btpl.io/cache/landing_logo.svg" />
         </a>
     </p>
 
     <div align="center">
-        <a class="btn btn-social-icon btn-twitter">
+        <a class="btn btn-social-icon btn-twitter" href="https://twitter.com/BitPlatter">
           <span class="fa fa-twitter"></span>
         </a>
 
-        <a class="btn btn-social-icon btn-facebook">
+        <a class="btn btn-social-icon btn-facebook" href="https://www.facebook.com/BitPlatter">
           <span class="fa fa-facebook"></span>
         </a>
 
 
-        <a class="btn btn-social-icon btn-linkedin">
+        <a class="btn btn-social-icon btn-linkedin" href="https://www.linkedin.com/company/bitplatter">
           <span class="fa fa-linkedin"></span>
         </a>
 
 
-        <a class="btn btn-social-icon btn-github">
+        <a class="btn btn-social-icon btn-github" href="https://github.com/bitplatter">
           <span class="fa fa-github"></span>
         </a>
     </div>
 
-</div>
+</footer>
 
 <script>
 
@@ -261,7 +282,7 @@ $( document ).ready(function() {
     $.each(timestamps[id] , function(index, val) {
         // Round x offset to give crisp lines
         hit = Math.floor(w*timestamps[id][index]/duration);
-        ctx.fillRect(hit, 0, 3, 50);
+        ctx.fillRect(hit, 0, 2, 50);
         
     });
 
