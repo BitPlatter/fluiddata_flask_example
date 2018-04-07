@@ -99,7 +99,7 @@ To configure the flask application we need to navigate to the
 Open the settings.py file and fill in the values for **FLUID_TOKEN** and
 **FLUID_RSS_URL**.  The **FLUID_TOKEN** will be your FluidDATA API token you
 obtained in the [FluidDATA API Token](#fluiddata-api-token) section.  The
-`FLUID_RSS_URL` can be any valid podcast RSS url.
+**FLUID_RSS_URL** can be any valid podcast RSS url.
 
 ```python
 FLUID_TOKEN = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
@@ -119,7 +119,7 @@ of the example rss feeds below.
 ## Running the Flask Application
 
 Once the settings.py file has been populated we are ready to run the flask
-application.  From the `fluiddata_flask_example` directory run the following
+application.  From the **fluiddata_flask_example** directory run the following
 command to start flask.
 
 ```bash
