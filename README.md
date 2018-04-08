@@ -87,7 +87,7 @@ Once you have your FluidDATA API token you will need to checkout and configure t
 application
 
 ```bash
-git clone <path>
+git clone https://github.com/BitPlatter/fluiddata_flask_example.git
 cd fluiddata_flask_example
 ```
 
