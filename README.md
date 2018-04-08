@@ -10,6 +10,8 @@ millions of podcast episodes.  This tutorial will show you how to setup the
 FluidDATA API and integrate it with a simple Flask application that allows you
 to search a single podcast channel.
 
+Checkout the running demo of this app at <https://flask-demo.bitplatter.com>.
+
 When you are done with this tutorial you can read the full API documentation here:
 [FluidDATA python API](https://docs.bitplatter.com/fluiddata-python/)
 
@@ -164,7 +166,7 @@ full documentation for the API can be found at
 <https://docs.bitplatter.com/fluiddata-python/>.
 
 
-To learn more about BitPlatter please visit our website at https://www.bitplatter.com.
+To learn more about BitPlatter please visit our website at <https://www.bitplatter.com>.
 
  
 <p align="center"><a href="https://www.bitplatter.com/fluiddata"><img src="https://cache.btpl.io/cache/bitplatter-trans.png" /></a></p>
