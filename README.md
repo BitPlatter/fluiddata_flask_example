@@ -115,7 +115,7 @@ of the example rss feeds below.
 | ------------- | ------------- |
 | Planet Money  | https://www.npr.org/rss/podcast.php?id=510289 |
 | Joe Rogan Experience | http://joeroganexp.joerogan.libsynpro.com/rss |
-| Indie Hackers | http://feeds.backtracks.fm/feeds/indiehackers/indiehackers/feed.xml?1522718080 |
+| StarTalk Radio | http://feeds.soundcloud.com/users/soundcloud:users:38128127/sounds.rss |
 
 
 ## Running the Flask Application
